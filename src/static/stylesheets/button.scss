@@ -1,0 +1,39 @@
+.button {
+  border: 0;
+  border-radius: 7px;
+  min-height: 35px;
+
+  &--primary {
+    background-color: $blue;
+    min-width: 200px;
+  }
+
+  &--tertiary {
+    background: none;
+    padding: 0 10px;
+  }
+
+  &__content {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  &__icon {
+    height: 15px;
+    line-height: 35px;
+    width: 17px;
+  }
+}
+
+.icon-button {
+  border: 1px solid $gray;
+  height: 32px;
+  width: 32px;
+
+  img,
+  svg {
+    padding: 5px;
+  }
+}
