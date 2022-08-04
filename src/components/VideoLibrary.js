@@ -3,11 +3,13 @@ import {observer} from "mobx-react";
 import {contentStore} from "../stores";
 import Card from "Components/common/Card";
 import EmbedPlayer from "Components/common/EmbedPlayer";
-import {Link} from "react-router-dom";
+import {Link, useRouteMatch} from "react-router-dom";
 import {PageLoader} from "Components/common/Loader";
 
 const VideoLibrary = observer(() => {
-  if(!contentStore.loaded) { return <PageLoader />; }
+  const match = useRouteMatch();
+  const objectView = !!match.params.mediaId;
+  if(!contentStore.loaded || (objectView && contentStore.loadingCurrentTitle)) { return <PageLoader />; }
 
   const lists = [
     {name: "Titles", metadataKey: "titles"},
@@ -25,16 +27,14 @@ const VideoLibrary = observer(() => {
     return (
       <div className="cards-grid">
         {
-          cardObjects.map(({objectId, imageUrl, title}) => (
+          cardObjects.map(({objectId, imageUrl, title, title_type}) => (
             <Link
               key={objectId}
-              to={`/videos/${objectId}`}
+              to={`/videos/${objectId}${["series", "season"].includes(title_type) ? `?type=${title_type}` : ""}`}
             >
               <Card
                 image={imageUrl}
                 title={title}
-                OnClick={async () => {
-                }}
               />
             </Link>
           ))
@@ -73,11 +73,9 @@ const VideoLibrary = observer(() => {
   const PageContent = () => {
     return (
       <div className="video-library-page">
-        <button className="" type="button" onClick={() => {}}>Back</button>
-
         {
-          contentStore.currentVideo && <EmbedPlayer
-            src={contentStore.currentVideo.embedPlayerUrl}
+          !objectView && contentStore.featuredVideo && <EmbedPlayer
+            src={contentStore.featuredVideo.embedPlayerUrl}
             width="80%"
           />
         }

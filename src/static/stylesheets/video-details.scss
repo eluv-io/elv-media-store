@@ -29,6 +29,24 @@
         display: grid;
         grid-template-rows: 35px fit-content(100%) 1fr;
       }
+
+      &__text {
+        line-height: 1.4rem;
+        padding-bottom: 20px;
+      }
+    }
+
+    .video-details__text--flex {
+      display: flex;
+      gap: 30px;
     }
   }
+
+  .eluvio-player__video {
+    border-radius: 12px;
+  }
+}
+
+.seasons__dropdown {
+  padding: 20px 0;
 }

@@ -1,12 +1,14 @@
 import {flow, makeAutoObservable} from "mobx";
-import {contentStore} from "./index";
+import {contentStore, rootStore} from "./index";
 import UrlJoin from "url-join";
 import URI from "urijs";
 import Id from "@eluvio/elv-client-js/src/Id";
 
 class ContentStore {
   loaded = false;
+  loadingCurrentTitle = false;
   currentVideo = undefined;
+  featuredVideo = undefined;
   titles = undefined;
   series = undefined;
   seasons = undefined;
@@ -14,6 +16,7 @@ class ContentStore {
   channels = undefined;
   playlists = undefined;
   trailers = undefined;
+  seasonEpisodes = undefined;
 
   constructor(rootStore) {
     this.rootStore = rootStore;
@@ -22,18 +25,6 @@ class ContentStore {
 
   get client() {
     return this.rootStore.client;
-  }
-
-  get titles() {
-    return this.titles;
-  }
-
-  get series() {
-    return this.series;
-  }
-
-  get playlists() {
-    return this.playlists;
   }
 
   ImageLinks = async ({baseLinkUrl, images, versionHash}) => {
@@ -95,11 +86,41 @@ class ContentStore {
       .toString();
   };
 
+  Reset = () => {
+    this.loaded = false;
+    this.loadingCurrentTitle = false;
+    this.currentVideo = undefined;
+    this.featuredVideo = undefined;
+    this.titles = undefined;
+    this.series = undefined;
+    this.seasons = undefined;
+    this.episodes = undefined;
+    this.channels = undefined;
+    this.playlists = undefined;
+    this.trailers = undefined;
+  }
+
+  SetFeaturedVideo = flow(function * () {
+    if(this.titles && this.titles.length) {
+      const lastVideo = this.titles[this.titles.length - 1];
+      lastVideo.embedPlayerUrl = yield this.GenerateEmbedUrl({
+        versionHash: lastVideo.sources.default["."].container
+      });
+      this.featuredVideo = lastVideo;
+    }
+  });
+
+  ContentObjectLibraryId = flow(function * ({objectId}) {
+    return yield this.client.ContentObjectLibraryId({
+      objectId
+    });
+  });
+
   LoadAssets = flow(function * ({objectId}) {
     try {
       const versionHash = yield this.client.LatestVersionHash({objectId});
 
-      const {episodes, playlists, seasons, series, titles, trailers, channels} = yield this.client.ContentObjectMetadata({
+      const {episodes, playlists, seasons, series, titles, trailers, channels, title_type} = yield this.client.ContentObjectMetadata({
         versionHash,
         metadataSubtree: "public/asset_metadata",
         resolveLinks: true,
@@ -112,7 +133,8 @@ class ContentStore {
           "series",
           "titles",
           "trailers",
-          "channels"
+          "channels",
+          "title_type"
         ]
       });
 
@@ -124,6 +146,11 @@ class ContentStore {
       this.channels = yield this.LoadTitles({channels, metadataKey: "channels", versionHash});
       this.playlists = yield this.LoadPlaylists({versionHash, playlists});
 
+      yield this.SetFeaturedVideo();
+
+      if(title_type === "series" && this.seasons && this.seasons.length) {
+        yield this.LoadSeasonEpisodes({objectId: this.seasons[0].objectId});
+      }
     } catch(error) {
       // eslint-disable-next-line no-console
       console.error("Failed to load site:", objectId);
@@ -131,6 +158,35 @@ class ContentStore {
       console.error(error);
     } finally {
       this.loaded = true;
+    }
+  });
+
+  LoadSeasonEpisodes = flow(function * ({objectId}) {
+    this.seasonEpisodes = undefined;
+    try {
+      const versionHash = yield this.client.LatestVersionHash({objectId});
+
+      const {episodes} = yield this.client.ContentObjectMetadata({
+        versionHash,
+        metadataSubtree: "public/asset_metadata",
+        resolveLinks: true,
+        resolveIncludeSource: true,
+        resolveIgnoreErrors: true,
+        select: [
+          "episodes"
+        ]
+      });
+
+      this.seasonEpisodes = yield this.LoadTitles({
+        titles: episodes,
+        versionHash,
+        metadataKey: "episodes"
+      });
+    } catch(error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to load episodes for season:", objectId);
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
   });
 
@@ -244,16 +300,58 @@ class ContentStore {
     return playlistObjects.filter(playlist => playlist);
   });
 
-  SetCurrentTitle = flow (function * ({title}) {
-    this.currentVideo = undefined;
-    if(["series", "site", "season"].includes(title.title_type)) {
-      contentStore.LoadAssets({objectId: title.objectId});
-    } else {
-      title.embedPlayerUrl = yield this.GenerateEmbedUrl({
-        versionHash: title.sources.default["."].container
+  LoadTitle = flow(function *({objectId, libraryId}) {
+    try {
+      return yield this.client.ContentObjectMetadata({
+        objectId,
+        libraryId,
+        metadataSubtree: "public",
+        select: [
+          "description",
+          "asset_metadata"
+        ]
       });
+    } catch(error) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to load video: ${objectId}`);
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  });
 
-      this.currentVideo = Object.assign({}, title);
+  SetCurrentTitle = flow (function * ({objectId}) {
+    this.currentVideo = undefined;
+    this.loadingCurrentTitle = true;
+
+    try {
+      const {asset_metadata, description} = yield this.LoadTitle({
+        objectId,
+        libraryId: yield this.ContentObjectLibraryId({objectId}),
+        metadataSubtree: "public",
+        select: [
+          "description",
+          "asset_metadata"
+        ]
+      });
+      const object = Object.assign(asset_metadata, {description});
+
+      if(["series", "season"].includes(object.title_type)) {
+        contentStore.LoadAssets({objectId});
+      } else {
+        object.embedPlayerUrl = yield this.GenerateEmbedUrl({
+          versionHash: object.sources.default["."].container
+        });
+
+        this.currentVideo = object;
+      }
+      // this.loadingCurrentTitle = true;
+    } catch(error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to set active title:");
+      // eslint-disable-next-line no-console
+      console.error(error);
+    } finally {
+      this.loadingCurrentTitle = false;
     }
   });
 }

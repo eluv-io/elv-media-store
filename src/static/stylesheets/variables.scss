@@ -1,2 +1,11 @@
 $gray: #565656;
 $blue: #1a65d6;
+$blue2: #436cde;
+
+@mixin component {
+  background: var(--background-component-primary);
+  border: var(--border-component-primary);
+  border-radius: var(--border-radius-component);
+  color: var(--color-component-text-primary);
+  font: var(--font-component-text);
+}

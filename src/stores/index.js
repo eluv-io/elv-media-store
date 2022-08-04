@@ -45,6 +45,7 @@ class RootStore {
 
       this.client.SetSigner({signer});
       this.networkInfo = yield this.client.NetworkInfo();
+      this.walletClient.LogOut();
     } catch(error) {
       console.error(error);
     } finally {
@@ -56,7 +57,8 @@ class RootStore {
     try {
       this.loggedIn = false;
       yield this.walletClient.LogIn({
-        method: "popup"
+        method: "popup",
+        clearLogin: true
       });
 
       this.loggedIn = true;

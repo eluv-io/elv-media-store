@@ -1,9 +1,9 @@
 import React from "react";
 import ImageIcon from "Components/common/ImageIcon";
 
-export const IconButton = ({icon}) => {
+export const IconButton = ({icon, title}) => {
   return (
-    <button type="button" className="icon-button">
+    <button type="button" className="icon-button" title={title}>
       <ImageIcon icon={icon} />
     </button>
   );

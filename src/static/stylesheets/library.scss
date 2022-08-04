@@ -4,23 +4,23 @@
     width: 100%;
   }
 
-  .cards-grid {
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    overflow-x: hidden;
-    padding-bottom: 20px;
-
-    .card-container {
-      flex-shrink: 0;
-    }
-  }
-
   .embed-player-container {
     background-color: #000;
     display: flex;
     justify-content: center;
     padding: 40px 25px;
     width: 100%;
+  }
+}
+
+.cards-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+
+  .card-container {
+    flex-shrink: 0;
   }
 }

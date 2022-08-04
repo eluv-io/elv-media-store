@@ -11,49 +11,16 @@ const VideoWrapper = observer(({children}) => {
   if(loading) { return <PageLoader />; }
 
   const LoadAssets = async () => {
-    try {
-      await contentStore.LoadAssets({objectId: rootStore.objectId});
-    } catch(error) {
-      // eslint-disable-next-line no-console
-      console.error("Failed to load site:", rootStore.objectId);
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
-
-  const LoadVideo = async () => {
-    try {
-      const object = await rootStore.client.ContentObjectMetadata({
-        objectId: match.params.mediaId,
-        libraryId: await rootStore.client.ContentObjectLibraryId({objectId: match.params.mediaId}),
-        metadataSubtree: "public",
-        select: [
-          "description",
-          "asset_metadata"
-        ]
-      });
-
-      await contentStore.SetCurrentTitle({
-        title: Object.assign(
-          object.asset_metadata, {description: object.description}
-        )
-      });
-    } catch(error) {
-      // eslint-disable-next-line no-console
-      console.error("Failed to set active title:");
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
+    await contentStore.LoadAssets({
+      objectId: match.params.mediaId || rootStore.objectId
+    });
   };
 
   useEffect(() => {
     setLoading(true);
     try {
+      contentStore.Reset();
       LoadAssets();
-
-      if(match.params.mediaId) {
-        LoadVideo();
-      }
     } finally {
       setLoading(false);
     }
