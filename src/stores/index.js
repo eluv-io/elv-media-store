@@ -8,6 +8,8 @@ configure({
   enforceActions: "always"
 });
 
+const searchParams = new URLSearchParams(decodeURIComponent(window.location.search));
+
 class RootStore {
   client = undefined;
   walletClient = undefined;
@@ -17,10 +19,12 @@ class RootStore {
   language = "en";
   territory = "U.S.A";
   objectId = EluvioConfiguration["objectId"];
+  darkMode = searchParams.has("dk") || this.GetSessionStorage("dark-mode");
 
   constructor() {
     makeAutoObservable(this);
 
+    this.ToggleDarkMode(this.darkMode);
     this.Initialize();
     this.contentStore = new ContentStore(this);
   }
@@ -32,15 +36,14 @@ class RootStore {
         assumeV3: true
       });
 
-      this.walletClient = new ElvWalletClient({
-        client: this.client,
-        network: EluvioConfiguration["network"],
-        mode: EluvioConfiguration["mode"]
+      this.walletClient = yield ElvWalletClient.Initialize({
+        network: EluvioConfiguration.network,
+        mode: EluvioConfiguration.mode
       });
 
       let wallet = this.client.GenerateWallet();
       let signer = wallet.AddAccount({
-        privateKey: EluvioConfiguration["key"]
+        privateKey: EluvioConfiguration.key
       });
 
       this.client.SetSigner({signer});
@@ -58,7 +61,7 @@ class RootStore {
       this.loggedIn = false;
       yield this.walletClient.LogIn({
         method: "popup",
-        clearLogin: true
+        // clearLogin: true
       });
 
       this.loggedIn = true;
@@ -66,6 +69,50 @@ class RootStore {
       console.error(error);
     }
   });
+
+  GetSessionStorage(key) {
+    try {
+      return sessionStorage.getItem(key);
+    } catch(error) {
+      return undefined;
+    }
+  }
+
+  SetSessionStorage(key, value) {
+    try {
+      return sessionStorage.setItem(key, value);
+    } catch(error) {
+      return undefined;
+    }
+  }
+
+  RemoveSessionStorage(key) {
+    try {
+      return sessionStorage.removeItem(key);
+    } catch(error) {
+      return undefined;
+    }
+  }
+
+  ToggleDarkMode = (enabled) => {
+    const themeContainer = document.querySelector("#_theme");
+    if(!enabled) {
+      this.RemoveSessionStorage("dark-mode");
+      themeContainer.innerHTML = "";
+      themeContainer.dataset.theme = "default";
+      return;
+    } else if(themeContainer.dataset.theme !== "dark") {
+      this.SetSessionStorage("dark-mode", "true");
+      import("Assets/stylesheets/themes/dark.theme.css")
+        .then(theme => {
+          themeContainer.innerHTML = theme.default;
+        });
+
+      themeContainer.dataset.theme = "dark";
+    }
+
+    this.darkMode = enabled;
+  }
 }
 
 export const rootStore = new RootStore();

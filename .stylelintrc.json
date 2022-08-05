@@ -9,6 +9,7 @@
     "keyframes-name-pattern": "([a-zA-Z0-9^]+[-]?[a-zA-Z0-9^]+)(?:--|__)([a-zA-Z0-9^]+[-]?[a-zA-Z0-9^]+)",
     "max-nesting-depth": 3,
     "max-empty-lines": 1,
+    "no-descending-specificity": null,
     "no-missing-end-of-source-newline": true,
     "number-leading-zero": null,
     "selector-attribute-operator-space-before": "never",
