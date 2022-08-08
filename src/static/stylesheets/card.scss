@@ -1,12 +1,11 @@
 .card-container {
   border-radius: 12px;
   overflow: hidden;
-  width: 300px;
 
   img {
     height: 100%;
     object-fit: cover;
-    transition: opacity 5s;
+    transition: opacity 1s;
     width: 100%;
 
     &.visible {

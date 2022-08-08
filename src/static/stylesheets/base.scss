@@ -94,6 +94,13 @@ select {
   }
 }
 
+[role="button"] {
+  &:focus-visible {
+    box-shadow: var(--box-shadow-input-focus);
+    outline: var(--outline-input-focus);
+  }
+}
+
 // Large
 @media screen and (min-width: $breakpoint) {
   .app-container {
@@ -104,6 +111,10 @@ select {
       max-width: $breakpoint;
       padding: 25px 30px 100px;
       width: 1250px;
+    }
+
+    .slider .handle {
+      width: 60px;
     }
   }
 }

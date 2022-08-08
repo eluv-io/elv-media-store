@@ -7,6 +7,8 @@ import {contentStore} from "../stores";
 import {Button} from "Components/common/Button";
 import {IconButton} from "Components/common/Button";
 import ExpandableSection from "Components/common/ExpandableSection";
+import {PageLoader} from "Components/common/Loader";
+import Slider from "Components/common/Slider";
 
 import ContractIcon from "Assets/icons/contract.svg";
 import DescriptionIcon from "Assets/icons/description.svg";
@@ -14,8 +16,6 @@ import SendIcon from "Assets/icons/send.svg";
 import ShareIcon from "Assets/icons/share.svg";
 import PlayIcon from "Assets/icons/play.svg";
 import PlusIcon from "Assets/icons/plus.svg";
-import {PageLoader} from "Components/common/Loader";
-import Card from "Components/common/Card";
 
 const VideoDetails = observer(() => {
   const match = useRouteMatch();
@@ -57,28 +57,20 @@ const VideoDetails = observer(() => {
             </select>
           </div>
 
-          { Cards() }
+          { SliderContent() }
         </div>
       </div>
     );
   };
 
-  const Cards = () => {
+  const SliderContent = () => {
     if(!contentStore.seasonEpisodes) { return null; }
 
     return (
-      <div className="cards-grid">
-        {
-          contentStore.seasonEpisodes.map(({objectId, imageUrl, title}) => (
-            <button key={objectId} onClick={() => contentStore.SetCurrentTitle({objectId})}>
-              <Card
-                image={imageUrl}
-                title={title}
-              />
-            </button>
-          ))
-        }
-      </div>
+      <Slider
+        itemObjects={contentStore.seasonEpisodes}
+        OnClick={({objectId}) => contentStore.SetCurrentTitle({objectId})}
+      />
     );
   };
 
@@ -133,7 +125,7 @@ const VideoDetails = observer(() => {
     );
   };
 
-  if(loading) { return <PageLoader />; }
+  if(loading || contentStore.loadingCurrentTitle) { return <PageLoader />; }
 
   return contentStore.currentVideo ? DetailsView() : LibraryView();
 });

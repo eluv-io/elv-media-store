@@ -1,10 +1,11 @@
 import React from "react";
 import {observer} from "mobx-react";
+import {useRouteMatch} from "react-router-dom";
+
 import {contentStore} from "../stores";
-import Card from "Components/common/Card";
 import EmbedPlayer from "Components/common/EmbedPlayer";
-import {Link, useRouteMatch} from "react-router-dom";
 import {PageLoader} from "Components/common/Loader";
+import Slider from "Components/common/Slider";
 
 const VideoLibrary = observer(() => {
   const match = useRouteMatch();
@@ -20,26 +21,18 @@ const VideoLibrary = observer(() => {
     {name: "Channels", metadataKey: "channels"}
   ];
 
-  const Cards = ({path}) => {
+  const SliderContent = ({path}) => {
     const metadataKey = path.shift();
-    const cardObjects = path.reduce(((previousValue, currentValue) => previousValue[currentValue]), contentStore[metadataKey]);
+    const itemObjects = path
+      .reduce(((previousValue, currentValue) => previousValue[currentValue]), contentStore[metadataKey]);
 
     return (
-      <div className="cards-grid">
-        {
-          cardObjects.map(({objectId, imageUrl, title, title_type}) => (
-            <Link
-              key={objectId}
-              to={`/videos/${objectId}${["series", "season"].includes(title_type) ? `?type=${title_type}` : ""}`}
-            >
-              <Card
-                image={imageUrl}
-                title={title}
-              />
-            </Link>
-          ))
-        }
-      </div>
+      <Slider
+        itemObjects={itemObjects}
+        linkPath={({objectId, title_type}) => {
+          return `/videos/${objectId}${["series", "season"].includes(title_type) ? `?type=${title_type}` : ""}`;
+        }}
+      />
     );
   };
 
@@ -50,8 +43,8 @@ const VideoLibrary = observer(() => {
 
       return (
         <div key={metadataKey}>
-          <h1>{ name }</h1>
-          { Cards({path: [metadataKey]}) }
+          <h1 className="row-header">{ name }</h1>
+          { SliderContent({path: [metadataKey]}) }
         </div>
       );
     });
@@ -63,8 +56,8 @@ const VideoLibrary = observer(() => {
     return contentStore.playlists.map(({playlistId, name, titles}, index) => {
       return (
         <div key={playlistId}>
-          <h1>{ name }</h1>
-          { Cards({path: ["playlists", index, "titles"], objects: titles, playlistIndex: index}) }
+          <h1 className="row-header">{ name }</h1>
+          { SliderContent({path: ["playlists", index, "titles"], objects: titles, playlistIndex: index}) }
         </div>
       );
     });
