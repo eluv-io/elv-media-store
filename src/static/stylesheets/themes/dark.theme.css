@@ -16,13 +16,10 @@
   --border: 1px solid #444444;
   --border-faint: 1px solid #333333;
 
-
   --border-color: #444444;
   --border-color-faint: #333333;
 
   --box-shadow: none;
-
-
 
   /* Header */
   --background-page-header: var(--color-bg-primary);

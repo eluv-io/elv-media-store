@@ -5,15 +5,15 @@
   img {
     height: 100%;
     object-fit: cover;
-    transition: opacity 1s;
+    transition: visibility .2s;
     width: 100%;
 
     &.visible {
-      opacity: 1;
+      visibility: visible;
     }
 
     &.hidden {
-      opacity: 0;
+      visibility: hidden;
     }
   }
 

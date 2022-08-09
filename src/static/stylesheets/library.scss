@@ -5,88 +5,19 @@
   }
 
   .embed-player-container {
-    background-color: var(--color-bg-primary);
     display: flex;
+    height: 580px;
     justify-content: center;
     padding: 40px 25px;
     width: 100%;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      height: 230px;
+      padding: 0;
+    }
   }
 }
 
 .row-header {
   padding: 0 65px 10px;
-}
-
-.slider {
-  padding: 0 60px;
-  position: relative;
-  z-index: 2;
-
-  .handle {
-    background: hsl(0deg 0% 8% / 50%);
-    bottom: 0;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    text-align: center;
-    top: 0;
-    width: 4%;
-    z-index: 20;
-
-    &:hover {
-      background: hsl(0deg 0% 8% / 70%);
-      transition: all 1s ease;
-    }
-
-    &.handle-next {
-      border-bottom-left-radius: 4px;
-      border-top-left-radius: 4px;
-      right: 0;
-    }
-  }
-
-  .right-caret {
-    align-self: center;
-    cursor: pointer;
-
-    &:hover::before {
-      font-size: 2.5rem;
-      transition: transform .1s ease-out 0s;
-    }
-
-    &::before {
-      content: "\003E";
-      font-size: 2rem;
-    }
-  }
-}
-
-.item-row {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 20px;
-  overflow-x: visible;
-  z-index: 0;
-
-  &--sliding {
-    pointer-events: none;
-    transform: translate3d(-100%, 0, 0);
-    transition: transform 3s ease 0s;
-  }
-
-  .slider-item {
-    flex-basis: 25%;
-    flex-shrink: 0;
-    padding: 0 6px;
-
-    &:last-child {
-      padding-right: 0;
-    }
-
-    .card-action,
-    .card-link {
-      width: 100%;
-    }
-  }
 }

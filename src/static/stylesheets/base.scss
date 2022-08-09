@@ -94,10 +94,20 @@ select {
   }
 }
 
-[role="button"] {
-  &:focus-visible {
-    box-shadow: var(--box-shadow-input-focus);
-    outline: var(--outline-input-focus);
+.content {
+  background-color: var(--color-page-bg);
+  border-radius: var(--border-radius-page-content);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: max-content;
+  max-width: 100%;
+  min-height: 100%;
+  padding: 15px 30px 100px;
+  width: 100vw;
+
+  &:not(.content--no-background) {
+    background: var(--background-content);
   }
 }
 
@@ -111,10 +121,6 @@ select {
       max-width: $breakpoint;
       padding: 25px 30px 100px;
       width: 1250px;
-    }
-
-    .slider .handle {
-      width: 60px;
     }
   }
 }

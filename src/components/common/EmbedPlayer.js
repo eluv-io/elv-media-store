@@ -1,11 +1,11 @@
 import React from "react";
 
-const EmbedPlayer = ({src, width="854", height="480"}) => {
+const EmbedPlayer = ({src}) => {
   return (
     <div className="embed-player-container">
       <iframe
-        width={width}
-        height={height}
+        width="100%"
+        height="100%"
         scrolling="no"
         marginHeight="0"
         marginWidth="0"

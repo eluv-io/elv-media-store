@@ -61,6 +61,11 @@ class ContentStore {
     embedUrl.searchParams.set("lp", "");
     embedUrl.searchParams.set("net", networkName);
     embedUrl.searchParams.set("ct", "s");
+    embedUrl.searchParams.set("nwm", "");
+
+    if(this.rootStore.darkMode) {
+      embedUrl.searchParams.set("dk", "");
+    }
 
     if(token) {
       embedUrl.searchParams.set("ath", token);

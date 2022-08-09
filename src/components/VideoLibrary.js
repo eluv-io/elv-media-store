@@ -23,12 +23,12 @@ const VideoLibrary = observer(() => {
 
   const SliderContent = ({path}) => {
     const metadataKey = path.shift();
-    const itemObjects = path
+    const items = path
       .reduce(((previousValue, currentValue) => previousValue[currentValue]), contentStore[metadataKey]);
 
     return (
       <Slider
-        itemObjects={itemObjects}
+        items={items}
         linkPath={({objectId, title_type}) => {
           return `/videos/${objectId}${["series", "season"].includes(title_type) ? `?type=${title_type}` : ""}`;
         }}
@@ -69,7 +69,6 @@ const VideoLibrary = observer(() => {
         {
           !objectView && contentStore.featuredVideo && <EmbedPlayer
             src={contentStore.featuredVideo.embedPlayerUrl}
-            width="80%"
           />
         }
 

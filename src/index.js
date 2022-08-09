@@ -27,9 +27,11 @@ const App = observer(() => {
         {
           appRoutes.map(({path, Component}) => (
             <Route exact={true} key={path} path={path}>
-              <VideoWrapper>
-                <Component />
-              </VideoWrapper>
+              <div className="content">
+                <VideoWrapper>
+                  <Component />
+                </VideoWrapper>
+              </div>
             </Route>
           ))
         }
