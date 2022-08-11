@@ -17,16 +17,16 @@ html {
   --color-bg-secondary: #EDEDED;
   --color-bg-highlight: #D1E0F7;
 
-  --color-text-primary: #000;
-  --color-text-secondary: #777;
-  --color-text-error: #f00;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #777777;
+  --color-text-error: #ff0000;
 
   --color-highlight-container-bg: var(--color-background-highlight);
-  --color-highlight-container-text: #fff;
+  --color-highlight-container-text: #ffffff;
 
   --color-loader: rgba(0, 0, 0, 0.5);
 
-  --border-color: #ccc;
+  --border-color: #cccccc;
   --border: 1px solid var(--border-color);
 
   --border-color-faint: #D2D2D2;
@@ -77,9 +77,9 @@ html {
   --border-button-secondary: var(--border);
   --border-radius-button-secondary: var(--border-radius);
 
-  --background-button-danger: #333;
+  --background-button-danger: #333333;
   --color-button-danger-text: var(--color-highlight-container-text);
-  --border-button-danger: 1px solid #333;
+  --border-button-danger: 1px solid #333333;
   --border-radius-button-danger: var(--border-radius);
 
   /* Togglable/selectable options */
@@ -127,7 +127,7 @@ html {
   --border-width-card: 1px;
   --border-radius-card: 5px;
 
-  --color-card-stock-available: #f00;
+  --color-card-stock-available: #ff0000;
   --color-card-stock-unavailable: #555;
 
   --color-card-badge-bg: var(--color-card-bg);
@@ -237,10 +237,10 @@ html {
   --box-shadow-login-box: var(--box-shadow);
 
   /* Misc (internal) */
-  --background-marketplace-card: #000;
-  --color-marketplace-card-text-primary: #fff;
-  --color-marketplace-card-text-secondary: #777;
+  --background-marketplace-card: #000000;
+  --color-marketplace-card-text-primary: #ffffff;
+  --color-marketplace-card-text-secondary: #777777;
   --border-marketplace-card: 0;
-  --border-marketplace-card-logo: 1px solid #333;
+  --border-marketplace-card-logo: 1px solid #333333;
   --border-radius-marketplace-card: 6px;
 }

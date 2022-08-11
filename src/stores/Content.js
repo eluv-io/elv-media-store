@@ -108,7 +108,7 @@ class ContentStore {
   SetFeaturedVideo = flow(function * () {
     if(this.titles && this.titles.length) {
       const lastVideo = this.titles[this.titles.length - 1];
-      lastVideo.embedPlayerUrl = yield this.GenerateEmbedUrl({
+      lastVideo.embedUrl = yield this.GenerateEmbedUrl({
         versionHash: lastVideo.sources.default["."].container
       });
       this.featuredVideo = lastVideo;
@@ -343,7 +343,7 @@ class ContentStore {
       if(["series", "season"].includes(object.title_type)) {
         contentStore.LoadAssets({objectId});
       } else {
-        object.embedPlayerUrl = yield this.GenerateEmbedUrl({
+        object.embedUrl = yield this.GenerateEmbedUrl({
           versionHash: object.sources.default["."].container
         });
 

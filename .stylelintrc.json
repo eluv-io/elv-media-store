@@ -5,8 +5,9 @@
   ],
   "rules": {
     "at-rule-empty-line-before": null,
+    "color-hex-length": null,
     "declaration-colon-space-before": "never",
-    "keyframes-name-pattern": "([a-zA-Z0-9^]+[-]?[a-zA-Z0-9^]+)(?:--|__)([a-zA-Z0-9^]+[-]?[a-zA-Z0-9^]+)",
+    "keyframes-name-pattern": null,
     "max-nesting-depth": 5,
     "max-empty-lines": 1,
     "no-descending-specificity": null,

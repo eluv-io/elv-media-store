@@ -12,7 +12,7 @@ const VideoWrapper = observer(({children}) => {
 
   const LoadAssets = async () => {
     await contentStore.LoadAssets({
-      objectId: match.params.mediaId || rootStore.objectId
+      objectId: match.params.objectId || rootStore.objectId
     });
   };
 

@@ -14,7 +14,7 @@ import {PageLoader} from "Components/common/Loader";
 
 export const appRoutes = [
   {path: "/videos", Component: VideoLibrary},
-  {path: "/videos/:mediaId", Component: VideoDetails}
+  {path: "/videos/:objectId", Component: VideoDetails}
 ];
 
 const App = observer(() => {
@@ -27,11 +27,9 @@ const App = observer(() => {
         {
           appRoutes.map(({path, Component}) => (
             <Route exact={true} key={path} path={path}>
-              <div className="content">
-                <VideoWrapper>
-                  <Component />
-                </VideoWrapper>
-              </div>
+              <VideoWrapper>
+                <Component />
+              </VideoWrapper>
             </Route>
           ))
         }

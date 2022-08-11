@@ -4,13 +4,16 @@
   transform: translate(0, 0);
   z-index: 2;
 
+  --swiper-navigation-color: var(--color-text-primary);
+
   @media screen and (max-width: $mobile-breakpoint) {
     padding: 0 10px;
   }
 
   .handle {
+    overflow: visible;
     bottom: 0;
-    color: #fff;
+    color: var(--color-text-primary);
     display: flex;
     justify-content: center;
     position: absolute;
@@ -37,7 +40,6 @@
   .right-caret,
   .left-caret {
     align-self: center;
-    color: #fff;
     cursor: pointer;
 
     &:hover::before {
@@ -58,8 +60,12 @@
     }
   }
 
-  .left-caret::before {
-    content: "\2329";
+  .left-caret {
+    margin-right: auto;
+
+    &::before {
+      content: "\2329";
+    }
   }
 
   .card-action,
@@ -72,8 +78,6 @@
   }
 
   .swiper {
-    overflow: visible;
-
     &-button-disabled {
       visibility: hidden;
     }

@@ -9,7 +9,7 @@ import Slider from "Components/common/Slider";
 
 const VideoLibrary = observer(() => {
   const match = useRouteMatch();
-  const objectView = !!match.params.mediaId;
+  const objectView = !!match.params.objectId;
   if(!contentStore.loaded || (objectView && contentStore.loadingCurrentTitle)) { return <PageLoader />; }
 
   const lists = [
@@ -42,7 +42,7 @@ const VideoLibrary = observer(() => {
       if(!hasContent) { return null; }
 
       return (
-        <div key={metadataKey}>
+        <div key={metadataKey} className="row-container">
           <h1 className="row-header">{ name }</h1>
           { SliderContent({path: [metadataKey]}) }
         </div>
@@ -55,7 +55,7 @@ const VideoLibrary = observer(() => {
 
     return contentStore.playlists.map(({playlistId, name, titles}, index) => {
       return (
-        <div key={playlistId}>
+        <div key={playlistId} className="row-container">
           <h1 className="row-header">{ name }</h1>
           { SliderContent({path: ["playlists", index, "titles"], objects: titles, playlistIndex: index}) }
         </div>
@@ -68,7 +68,7 @@ const VideoLibrary = observer(() => {
       <div className="video-library-page">
         {
           !objectView && contentStore.featuredVideo && <EmbedPlayer
-            src={contentStore.featuredVideo.embedPlayerUrl}
+            src={contentStore.featuredVideo.embedUrl}
           />
         }
 

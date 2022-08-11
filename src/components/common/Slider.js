@@ -1,15 +1,22 @@
-import React, {useCallback, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import Card from "Components/common/Card";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation, A11y} from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
+import {observer} from "mobx-react";
 
-const Slider = ({items, linkPath, OnClick, itemsToShow=4}) => {
+const Slider = observer(({items, linkPath, OnClick, itemsToShow=4}) => {
   const [swiperRef, setSwiperRef] = useState(null);
-  const [isEnd, setIsEnd] = useState(false);
-  const [isBeginning, setIsBeginning] = useState(true);
+  // const [isEnd, setIsEnd] = useState(false);
+  // const [isBeginning, setIsBeginning] = useState(true);
+
+  useEffect(() => {
+    return () => {
+      if(swiperRef) swiperRef.destroy();
+    };
+  }, []);
 
   const LinkContainer = (props) => {
     const link = typeof linkPath === "function" ? linkPath(props) : linkPath;
@@ -41,34 +48,38 @@ const Slider = ({items, linkPath, OnClick, itemsToShow=4}) => {
     );
   };
 
-  const HandleLeftClick = useCallback(() => {
-    if(!swiperRef) return;
-    swiperRef.slidePrev();
-  }, [swiperRef]);
-
-  const HandleRightClick = useCallback(() => {
-    if(!swiperRef) return;
-    swiperRef.slideNext();
-  }, [swiperRef]);
+  // const HandleLeftClick = useCallback(() => {
+  //   if(!swiperRef) return;
+  //   swiperRef.slidePrev();
+  // }, [swiperRef]);
+  //
+  // const HandleRightClick = useCallback(() => {
+  //   if(!swiperRef) return;
+  //   swiperRef.slideNext();
+  // }, [swiperRef]);
 
   const PageContent = () => {
     return (
       <div className="slider">
-        {
-          !isBeginning && (items.length > itemsToShow) && <span role="button" onClick={HandleLeftClick} className="handle handle-prev">
-            <div className="left-caret"/>
-          </span>
-        }
+        {/*{*/}
+        {/*  !isBeginning && <span role="button" onClick={HandleLeftClick} className="handle handle-prev">*/}
+        {/*    <div className="left-caret"/>*/}
+        {/*  </span>*/}
+        {/*}*/}
         <Swiper
           modules={[Navigation, A11y]}
           direction="horizontal"
           spaceBetween={12}
           slidesPerView={itemsToShow}
-          onSwiper={setSwiperRef}
-          onSlideChange={(swiper) => {
-            setIsBeginning(swiper.isBeginning);
-            setIsEnd(swiper.isEnd);
+          navigation={{
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
           }}
+          onSwiper={setSwiperRef}
+          // onSlideChange={(swiper) => {
+          //   setIsBeginning(swiper.isBeginning);
+          //   setIsEnd(swiper.isEnd);
+          // }}
           breakpoints={{
             300: {
               slidesPerView: 2,
@@ -100,19 +111,19 @@ const Slider = ({items, linkPath, OnClick, itemsToShow=4}) => {
             ))
           }
 
-          {/*<div className="swiper-button-prev swiper-custom-nav"></div>*/}
-          {/*<div className="swiper-button-next swiper-custom-nav"></div>*/}
+          <div className="swiper-button-prev swiper-custom-nav"></div>
+          <div className="swiper-button-next swiper-custom-nav"></div>
         </Swiper>
-        {
-          !isEnd && (items.length > itemsToShow) && <span role="button" onClick={HandleRightClick} className="handle handle-next">
-            <div className="right-caret"/>
-          </span>
-        }
+        {/*{*/}
+        {/*  !isEnd && <span role="button" onClick={HandleRightClick} className="handle handle-next">*/}
+        {/*    <div className="right-caret"/>*/}
+        {/*  </span>*/}
+        {/*}*/}
       </div>
     );
   };
 
   return PageContent();
-};
+});
 
 export default Slider;

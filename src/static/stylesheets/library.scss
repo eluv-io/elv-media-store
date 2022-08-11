@@ -2,6 +2,14 @@
   .lists-container {
     padding: 40px 0;
     width: 100%;
+
+    .row-container {
+      padding-bottom: 40px;
+
+      .row-header {
+        padding: 0 65px 10px;
+      }
+    }
   }
 
   .embed-player-container {
@@ -16,8 +24,4 @@
       padding: 0;
     }
   }
-}
-
-.row-header {
-  padding: 0 65px 10px;
 }
